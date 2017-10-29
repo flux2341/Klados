@@ -2,26 +2,18 @@
 import os
 import nltk
 from nltk.probability import FreqDist
-
 import string
 
-
-
-
-
-
-default_stopwords = set(nltk.corpus.stopwords.words('english'))
 
 path = 'D:\\data\\writing20170708'
 
 file_count = 0
+line_count = 0
+word_count = 0
+character_count = 0
 
-# freq = FreqDist('abbb') + FreqDist('bcc')
-# for word, frequencey in freq.most_common(100):
-#     print(word, end=' ')
-#     print(frequencey)
-
-
+print('processing '+path)
+default_stopwords = set(nltk.corpus.stopwords.words('english'))
 master_freq = FreqDist()
 for root, dirs, file_names in os.walk(path):
     #path = root.split(os.sep)
@@ -42,16 +34,26 @@ for root, dirs, file_names in os.walk(path):
                 words = [word for word in words if word not in default_stopwords]
                 fdist = FreqDist(words)
                 master_freq += fdist
+
+                file_count += 1
+                line_count += file_text.count('\n')
+                word_count += len(words)
+                character_count += len(file_text)
+
             except Exception as ex:
                 print('error loading '+file_path + ': ' +str(ex))
             finally:
                 file.close()
-                file_count += 1
+
                 if file_count%100 == 0:
-                    print(f'files processed: {file_count}')
+                    print(f'\tfiles processed: {file_count}')
         else:
-            print(f'skipping {file_path}')
+            print(f'\tskipping {file_path}')
 
-
+print()
+print(f'files: {file_count}')
+print(f'lines: {line_count}')
+print(f'words: {word_count}')
+print(f'characters: {character_count}')
 for word, frequency in master_freq.most_common(50):
     print(f'{word} {frequency}')
