@@ -20,7 +20,7 @@ for root, dirs, file_names in os.walk(path):
     #print(os.path.basename(root))
     for file_name in file_names:
         file_path = root + os.sep + file_name
-        if file_name.find('.') == -1 or file_name.endswith('.txt'):
+        if file_name.find('.') == -1 or file_name.endswith('.txt') or file_name.endswith('.md'):
             try:
                 # file = open(file_path, 'r', encoding='utf8')
                 file = open(file_path, 'r', encoding="ISO-8859-1")
