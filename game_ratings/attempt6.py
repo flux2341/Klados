@@ -1,9 +1,7 @@
 
 
-
-# compare each test user to every other user to get a similarity score
-# take games they both rated, take the average difference between those scores
-# among users who have a similarity > 0.99, take the average scores
+# for a given test user and game
+# compare this user with all other users
 
 
 import pandas as pd
@@ -12,7 +10,7 @@ import pandas as pd
 data_path = r'C:\Users\flux\data\boardgame-frequent-users.csv'
 #data_path = r'C:\Users\flux\data\boardgame-users.csv'
 test_data_path = r'C:\Users\flux\data\boardgame-users-test.csv'
-output_path = r'C:\Users\flux\data\output-frequent.csv'
+output_path = r'C:\Users\flux\data\output-frequent-weighted.csv'
 
 print('loading data')
 
@@ -37,6 +35,8 @@ for row_id, player_id in enumerate(player_ids):
 
 print('processing test data')
 
+similarity_threshold = 0.9
+
 df_test['rating'] = pd.Series([float('nan')]*df_test.shape[0])
 for row_id, row in df_test.iterrows():
 
@@ -52,25 +52,45 @@ for row_id, row in df_test.iterrows():
         print(player_id1, ': skipping player')
         continue
 
+    weight_sum = 0
     for player_id2 in player_ids:
         inner_join = pd.merge(ratings[player_id1], ratings[player_id2], on='game_id', how='inner')
         diff = inner_join['rating_x'] - inner_join['rating_y']
         similarity = 1 - abs(diff.mean())/10
-        if similarity > 0.99:
+        if similarity > similarity_threshold:
             game_row = ratings[player_id2].loc[ratings[player_id2]['game_id'] == game_id]
             if not game_row.empty:
-                game_rating_sum += game_row['rating'].iloc[0]
+                weight = (similarity-similarity_threshold)/(1.0-similarity_threshold)
+                game_rating_sum += (game_row['rating'].iloc[0])*weight
                 game_rating_count += 1
+                weight_sum += weight
 
     if game_rating_count > 0:
-        v = game_rating_sum/game_rating_count
-        print(player_id1, v, game_rating_count)
+        v = game_rating_sum/weight_sum
+        print(int(player_id1), v, game_rating_count)
         df_test.at[row_id, 'rating'] = v
     else:
         print(player_id1, ': no matches found')
 
 
-
 df_test = df_test.dropna()
 df_test.to_csv(output_path)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
