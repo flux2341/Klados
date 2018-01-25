@@ -8,8 +8,8 @@ import nltk
 from nltk.probability import FreqDist
 
 
-path_ratings = r'C:\Users\flux\data\nlp\toxicity_annotations_unanimous.tsv'
-path_comments = r'C:\Users\flux\data\nlp\toxicity_annotated_comments_unanimous.tsv'
+path_ratings = r'C:\Users\flux\data\toxic_comments\toxicity_annotations_unanimous.tsv'
+path_comments = r'C:\Users\flux\data\toxic_comments\toxicity_annotated_comments_unanimous.tsv'
 
 default_stopwords = set(nltk.corpus.stopwords.words('english'))
 from nltk.stem import WordNetLemmatizer
