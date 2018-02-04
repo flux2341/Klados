@@ -17,8 +17,7 @@ path_ratings = r'C:\Users\flux\data\toxic_comments\toxicity_annotations_unanimou
 path_comments = r'C:\Users\flux\data\toxic_comments\toxicity_annotated_comments_unanimous.tsv'
 # path_ratings = r'C:\Users\flux\data\toxic_comments\toxicity_annotations.tsv'
 # path_comments = r'C:\Users\flux\data\toxic_comments\toxicity_annotated_comments.tsv'
-path_output = r'C:\Users\flux\data\toxic_comments\output6.csv'
-
+path_output = r'C:\Users\flux\data\toxic_comments\output-7.csv'
 
 ratings = pd.read_csv(path_ratings, sep='\t', index_col=0,
                       names=['rev_id', 'worker_id', 'toxicity', 'toxicity_score'],
@@ -43,8 +42,8 @@ for rev_id, row in comments.iterrows():
 
     comment_ratings = ratings.loc[[rev_id]]
     n_ratings = comment_ratings.shape[0]
-    mean_rating = comment_ratings.mean()['toxicity']
-    median_rating = comment_ratings.median()['toxicity']
+    mean_rating = comment_ratings.mean()['toxicity_score']
+    median_rating = comment_ratings.median()['toxicity_score']
 
     comment = row['comment']
 
